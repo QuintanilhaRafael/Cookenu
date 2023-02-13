@@ -4,9 +4,9 @@ import { Authenticator } from "../services/Authenticator"
 import { HashManager } from "../services/HashManager"
 import { User } from "../model/User"
 import { IdGenerator } from "../services/IdGenerator"
-import { LoginInputDTO, UserInputDTO } from "../model/UserDTO"
+import { LoginInputDTO, UserInputDTO, UserOutputDTO } from "../model/UserDTO"
 import { UserRepository } from "./UserRepository"
-import { AuthenticationData } from "../model/authenticationData"
+import { AuthenticationData } from "../model/AuthenticationData"
 
 const authenticator = new Authenticator()
 const hashManager = new HashManager()
@@ -91,9 +91,9 @@ export class UserBusiness {
         throw new InvalidPassword()
       }
 
-      const data = new AuthenticationData(newUser.getId())
+      const authenticationData = new AuthenticationData(newUser.getId())
 
-      const token = authenticator.generateToken(data)
+      const token = authenticator.generateToken(authenticationData)
 
       return token;
     } catch (error: any) {
@@ -101,5 +101,19 @@ export class UserBusiness {
     }
   };
 
+  async getUser(token: string): Promise<UserOutputDTO> {
+    try {
+
+      const tokenData = authenticator.getTokenData(token)
+
+      const authenticationData = new AuthenticationData(tokenData.id)
+
+      const user = await this.userDatabase.findUserById(authenticationData.getId())
+
+      return user;
+    } catch (error: any) {
+      throw new CustomError(400, error.message)
+    }
+  };
 
 }

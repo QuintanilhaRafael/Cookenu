@@ -4,7 +4,7 @@ import { LoginInputDTO, UserInputDTO } from "../model/UserDTO";
 
 export class UserController {
 
-  constructor(private userBusiness: UserBusiness){}
+  constructor(private userBusiness: UserBusiness) { }
 
   async signup(req: Request, res: Response): Promise<void> {
     try {
@@ -14,7 +14,7 @@ export class UserController {
         password: req.body.password
       }
 
-      const token = await this.userBusiness.signup(input);
+      const token = await this.userBusiness.signup(input)
 
       res.status(201).send({ message: "User successfully created.", token });
     } catch (error: any) {
@@ -22,7 +22,7 @@ export class UserController {
     }
   }
 
-  async login (req: Request, res: Response): Promise<void> {
+  async login(req: Request, res: Response): Promise<void> {
     try {
       const { email, password } = req.body;
 
@@ -31,11 +31,23 @@ export class UserController {
         password
       };
 
-      const token = await this.userBusiness.login(input);
+      const token = await this.userBusiness.login(input)
 
       res.status(200).send({ token });
     } catch (error: any) {
       res.status(400).send(error.message);
     }
-  };
+  }
+
+  async getUser(req: Request, res: Response): Promise<void> {
+    try {
+      const token = req.headers.authorization as string
+
+      const user = await this.userBusiness.getUser(token)
+
+      res.status(200).send(user);
+    } catch (error: any) {
+      res.status(400).send(error.message);
+    }
+  }
 }
