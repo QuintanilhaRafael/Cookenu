@@ -1,18 +1,21 @@
 ### SIGN UP
-POST http://localhost:3003/user/signup
+POST http://localhost:3003/signup
 Content-Type: application/json
 
 {
-    "name": "Pedro Santos",
-    "email": "pedro.santos@email.com",
+    "name": "Rodrigo Silva",
+    "email": "rodrigo.silva@email.com",
     "password": "123456"
 }
 
 ### LOGIN
-POST http://localhost:3003/user/login
+POST http://localhost:3003/login
 Content-Type: application/json
 
 {
    "email": "jose.ferreira@email.com" ,
    "password": "123456"
 }
+### GET USER
+GET http://localhost:3003/user/profile
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhNzdiNWZhLWRlZDctNDZkNy04OTJiLTExZjc5ZTJjM2Q5NSIsImlhdCI6MTY3NjMxNzQ2MywiZXhwIjoxNjc2MzIxMDYzfQ.iSmfzz1ciMI0sKOKtszKs8Np6rMOMw9AQY93O-sVMVs
