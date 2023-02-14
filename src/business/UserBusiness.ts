@@ -46,7 +46,7 @@ export class UserBusiness {
         password: hashPassword
       }
 
-      await this.userDatabase.insert(user)
+      await this.userDatabase.insertUser(user)
 
       const token = authenticator.generateToken({ id })
 
@@ -99,6 +99,10 @@ export class UserBusiness {
 
       const user = await this.userDatabase.findUserById(userId)
 
+      if (!user) {
+        throw new UserNotFound()
+      }
+
       return user
     } catch (error: any) {
       throw new CustomError(400, error.message)
@@ -114,6 +118,10 @@ export class UserBusiness {
       authenticator.getTokenData(token)
 
       const user = await this.userDatabase.findUserById(id)
+
+      if (!user) {
+        throw new UserNotFound()
+      }
 
       return user
     } catch (error: any) {

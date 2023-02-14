@@ -18,9 +18,22 @@ Content-Type: application/json
 }
 ### GET PROFILE
 GET http://localhost:3003/user/profile
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhNzdiNWZhLWRlZDctNDZkNy04OTJiLTExZjc5ZTJjM2Q5NSIsImlhdCI6MTY3NjQwMTM4NywiZXhwIjoxNjc2NDA0OTg3fQ.rFWFggGeT5PyB5k9i9D8qJHLUU4RoAtcSzb_mxI-o4E
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhNzdiNWZhLWRlZDctNDZkNy04OTJiLTExZjc5ZTJjM2Q5NSIsImlhdCI6MTY3NjQwNjQ2NiwiZXhwIjoxNjc2NDEwMDY2fQ.npq6c_0fDR2BCy_S1C5GCgOY6bvNfgpH1aXilpF8suk
 
 ### GET USER
 GET http://localhost:3003/user/05975280-192a-4bed-be15-31f58d2b4762
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhNzdiNWZhLWRlZDctNDZkNy04OTJiLTExZjc5ZTJjM2Q5NSIsImlhdCI6MTY3NjQwMTM4NywiZXhwIjoxNjc2NDA0OTg3fQ.rFWFggGeT5PyB5k9i9D8qJHLUU4RoAtcSzb_mxI-o4E
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhNzdiNWZhLWRlZDctNDZkNy04OTJiLTExZjc5ZTJjM2Q5NSIsImlhdCI6MTY3NjQwNjQ2NiwiZXhwIjoxNjc2NDEwMDY2fQ.npq6c_0fDR2BCy_S1C5GCgOY6bvNfgpH1aXilpF8suk
 
+### CREATE RECIPE
+POST http://localhost:3003/recipe
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhNzdiNWZhLWRlZDctNDZkNy04OTJiLTExZjc5ZTJjM2Q5NSIsImlhdCI6MTY3NjQwNjQ2NiwiZXhwIjoxNjc2NDEwMDY2fQ.npq6c_0fDR2BCy_S1C5GCgOY6bvNfgpH1aXilpF8suk
+Content-Type: application/json
+
+{
+    "title": "Bolo de chocolate",
+    "description": "bolo feito com farinha, cacau em pó e fermento"
+}
+
+### GET RECIPE
+GET http://localhost:3003/recipe/78c47171-8b30-4acf-bdd0-62d6634badb1
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhNzdiNWZhLWRlZDctNDZkNy04OTJiLTExZjc5ZTJjM2Q5NSIsImlhdCI6MTY3NjQwNjQ2NiwiZXhwIjoxNjc2NDEwMDY2fQ.npq6c_0fDR2BCy_S1C5GCgOY6bvNfgpH1aXilpF8suk

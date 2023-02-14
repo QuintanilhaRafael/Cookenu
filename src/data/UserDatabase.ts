@@ -7,7 +7,7 @@ import { BaseDatabase } from "./BaseDatabase";
 export class UserDatabase extends BaseDatabase implements UserRepository {
   private static TABLE_NAME = "cookenu_users";
 
-  async insert(user: user): Promise<void> {
+  async insertUser(user: user): Promise<void> {
     try {
       await UserDatabase.connection
         .insert(user)
@@ -26,7 +26,7 @@ export class UserDatabase extends BaseDatabase implements UserRepository {
     } catch (error: any) {
       throw new CustomError(400, error.message);
     }
-  };
+  }
 
   async findUserById(id: string): Promise<UserOutputDTO> {
     try {
@@ -37,6 +37,6 @@ export class UserDatabase extends BaseDatabase implements UserRepository {
     } catch (error: any) {
       throw new CustomError(400, error.message);
     }
-  };
+  }
 
 }
