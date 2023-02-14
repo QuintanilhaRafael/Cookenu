@@ -16,6 +16,11 @@ Content-Type: application/json
    "email": "jose.ferreira@email.com" ,
    "password": "123456"
 }
-### GET USER
+### GET PROFILE
 GET http://localhost:3003/user/profile
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhNzdiNWZhLWRlZDctNDZkNy04OTJiLTExZjc5ZTJjM2Q5NSIsImlhdCI6MTY3NjM3ODM0NSwiZXhwIjoxNjc2MzgxOTQ1fQ.jB-t2YwoakiwNfBkjnHIJNHBk3ZDZUbrjTMfFJi9ggM
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhNzdiNWZhLWRlZDctNDZkNy04OTJiLTExZjc5ZTJjM2Q5NSIsImlhdCI6MTY3NjQwMTM4NywiZXhwIjoxNjc2NDA0OTg3fQ.rFWFggGeT5PyB5k9i9D8qJHLUU4RoAtcSzb_mxI-o4E
+
+### GET USER
+GET http://localhost:3003/user/05975280-192a-4bed-be15-31f58d2b4762
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImVhNzdiNWZhLWRlZDctNDZkNy04OTJiLTExZjc5ZTJjM2Q5NSIsImlhdCI6MTY3NjQwMTM4NywiZXhwIjoxNjc2NDA0OTg3fQ.rFWFggGeT5PyB5k9i9D8qJHLUU4RoAtcSzb_mxI-o4E
+

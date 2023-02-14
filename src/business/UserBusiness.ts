@@ -1,5 +1,5 @@
 import { CustomError } from "../error/CustomError"
-import { InvalidEmail, InvalidName, InvalidPassword, UserNotFound } from "../error/UserErrors"
+import { InvalidEmail, InvalidName, InvalidPassword, Unauthorized, UserNotFound } from "../error/UserErrors"
 import { Authenticator } from "../services/Authenticator"
 import { HashManager } from "../services/HashManager"
 import { user } from "../model/user"
@@ -50,7 +50,7 @@ export class UserBusiness {
 
       const token = authenticator.generateToken({ id })
 
-      return token;
+      return token
     } catch (error: any) {
       throw new CustomError(error.statusCode, error.message)
     }
@@ -83,23 +83,42 @@ export class UserBusiness {
 
       const token = authenticator.generateToken({ id: user.id })
 
-      return token;
+      return token
     } catch (error: any) {
       throw new CustomError(400, error.message)
     }
-  };
+  }
 
-  async getUser(token: string): Promise<UserOutputDTO> {
+  async getProfile(token: string): Promise<UserOutputDTO> {
     try {
+      if (!token) {
+        throw new CustomError(422, "token must be provided.")
+      }
 
       const userId = authenticator.getTokenData(token).id
 
       const user = await this.userDatabase.findUserById(userId)
 
-      return user;
+      return user
     } catch (error: any) {
       throw new CustomError(400, error.message)
     }
-  };
+  }
+
+  async getUser(token: string, id: string): Promise<UserOutputDTO> {
+    try {
+      if (!id || !token) {
+        throw new CustomError(422, "id and token must be provided.")
+      }
+
+      authenticator.getTokenData(token)
+
+      const user = await this.userDatabase.findUserById(id)
+
+      return user
+    } catch (error: any) {
+      throw new CustomError(400, error.message)
+    }
+  }
 
 }
