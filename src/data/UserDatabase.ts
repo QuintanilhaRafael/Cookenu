@@ -1,13 +1,13 @@
 import { UserRepository } from "../business/UserRepository";
 import { CustomError } from "../error/CustomError";
-import { User } from "../model/User";
+import { user } from "../model/user";
 import { UserOutputDTO } from "../model/UserDTO";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class UserDatabase extends BaseDatabase implements UserRepository {
   private static TABLE_NAME = "cookenu_users";
 
-  async insert(user: User): Promise<void> {
+  async insert(user: user): Promise<void> {
     try {
       await UserDatabase.connection
         .insert(user)
@@ -17,7 +17,7 @@ export class UserDatabase extends BaseDatabase implements UserRepository {
     }
   }
 
-  async findUserByEmail(email: string): Promise<any> {
+  async findUserByEmail(email: string): Promise<user> {
     try {
       const result = await UserDatabase.connection(UserDatabase.TABLE_NAME)
         .select().where({ email })
