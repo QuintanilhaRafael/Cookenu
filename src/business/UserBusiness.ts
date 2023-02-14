@@ -1,12 +1,11 @@
 import { CustomError } from "../error/CustomError"
-import { InvalidEmail, InvalidName, InvalidPassword, UserNotFound } from "../error/UserErrors"
+import { InvalidEmail, InvalidName, InvalidPassword, Unauthorized, UserNotFound } from "../error/UserErrors"
 import { Authenticator } from "../services/Authenticator"
 import { HashManager } from "../services/HashManager"
-import { User } from "../model/User"
+import { user } from "../model/user"
 import { IdGenerator } from "../services/IdGenerator"
 import { LoginInputDTO, UserInputDTO, UserOutputDTO } from "../model/UserDTO"
 import { UserRepository } from "./UserRepository"
-import { AuthenticationData } from "../model/AuthenticationData"
 
 const authenticator = new Authenticator()
 const hashManager = new HashManager()
@@ -40,20 +39,18 @@ export class UserBusiness {
 
       const hashPassword: string = await hashManager.generateHash(password)
 
-      const user = new User(
+      const user: user = {
         id,
         name,
         email,
-        hashPassword
-      )
+        password: hashPassword
+      }
 
-      await this.userDatabase.insert(user)
+      await this.userDatabase.insertUser(user)
 
-      const data = new AuthenticationData(id)
+      const token = authenticator.generateToken({ id })
 
-      const token = authenticator.generateToken(data)
-
-      return token;
+      return token
     } catch (error: any) {
       throw new CustomError(error.statusCode, error.message)
     }
@@ -78,42 +75,58 @@ export class UserBusiness {
         throw new UserNotFound()
       }
 
-      const newUser = new User(
-        user.id,
-        user.name,
-        user.email,
-        user.password
-      )
-
-      const compareResult: boolean = await hashManager.compareHash(password, newUser.getPassword())
+      const compareResult: boolean = await hashManager.compareHash(password, user.password)
 
       if (!compareResult) {
         throw new InvalidPassword()
       }
 
-      const authenticationData = new AuthenticationData(newUser.getId())
+      const token = authenticator.generateToken({ id: user.id })
 
-      const token = authenticator.generateToken(authenticationData)
-
-      return token;
+      return token
     } catch (error: any) {
       throw new CustomError(400, error.message)
     }
-  };
+  }
 
-  async getUser(token: string): Promise<UserOutputDTO> {
+  async getProfile(token: string): Promise<UserOutputDTO> {
     try {
+      if (!token) {
+        throw new CustomError(422, "token must be provided.")
+      }
 
-      const tokenData = authenticator.getTokenData(token)
+      const userId = authenticator.getTokenData(token).id
 
-      const authenticationData = new AuthenticationData(tokenData.id)
+      const user = await this.userDatabase.findUserById(userId)
 
-      const user = await this.userDatabase.findUserById(authenticationData.getId())
+      if (!user) {
+        throw new UserNotFound()
+      }
 
-      return user;
+      return user
     } catch (error: any) {
       throw new CustomError(400, error.message)
     }
-  };
+  }
+
+  async getUser(token: string, id: string): Promise<UserOutputDTO> {
+    try {
+      if (!id || !token) {
+        throw new CustomError(422, "id and token must be provided.")
+      }
+
+      authenticator.getTokenData(token)
+
+      const user = await this.userDatabase.findUserById(id)
+
+      if (!user) {
+        throw new UserNotFound()
+      }
+
+      return user
+    } catch (error: any) {
+      throw new CustomError(400, error.message)
+    }
+  }
 
 }

@@ -1,16 +1,6 @@
-export class User {
-  constructor(
-    private id: string,
-    private name: string,
-    private email: string,
-    private password: string
-  ) { }
-
-    public getId() {
-      return this.id
-    }
-
-    public getPassword() {
-      return this.password
-    }
+export type user = {
+  id: string,
+  name: string,
+  email: string,
+  password: string
 }

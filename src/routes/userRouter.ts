@@ -13,5 +13,7 @@ userRouter.post("/signup", (req, res) => userController.signup(req, res))
 
 userRouter.post("/login", (req, res) => userController.login(req, res))
 
-userRouter.get("/user/profile", (req, res) => userController.getUser(req, res))
+userRouter.get("/user/profile", (req, res) => userController.getProfile(req, res))
+
+userRouter.get("/user/:id", (req, res) => userController.getUser(req, res))
 

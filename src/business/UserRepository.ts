@@ -1,8 +1,8 @@
-import { User } from "../model/User";
+import { user } from "../model/user";
 import { UserOutputDTO } from "../model/UserDTO";
 
 export interface UserRepository {
-    insert(user: User): Promise<void>
-    findUserByEmail(email: string): Promise<any>
+    insertUser(user: user): Promise<void>
+    findUserByEmail(email: string): Promise<user>
     findUserById(id: string): Promise<UserOutputDTO>
 }

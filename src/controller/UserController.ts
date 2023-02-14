@@ -39,11 +39,24 @@ export class UserController {
     }
   }
 
-  async getUser(req: Request, res: Response): Promise<void> {
+  async getProfile(req: Request, res: Response): Promise<void> {
     try {
       const token = req.headers.authorization as string
 
-      const user = await this.userBusiness.getUser(token)
+      const user = await this.userBusiness.getProfile(token)
+
+      res.status(200).send(user);
+    } catch (error: any) {
+      res.status(400).send(error.message);
+    }
+  }
+
+  async getUser(req: Request, res: Response): Promise<void> {
+    try {
+      const token = req.headers.authorization as string
+      const id = req.params.id
+
+      const user = await this.userBusiness.getUser(token, id)
 
       res.status(200).send(user);
     } catch (error: any) {
