@@ -1,3 +1,4 @@
-export type authenticationData = {
-  id: string
+export interface AuthenticationData {
+  id: string,
+  role: string
 }

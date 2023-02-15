@@ -1,21 +1,30 @@
 import * as jwt from "jsonwebtoken"
 import { CustomError } from "../error/CustomError";
-import { authenticationData } from "../model/authenticationData";
+import { AuthenticationData } from "../model/authenticationData";
 
 export class Authenticator {
-    public generateToken = ({ id }: authenticationData): string => {
+    public generateToken = (input: AuthenticationData): string => {
         const token = jwt.sign(
-            { id },
+            {
+                id: input.id,
+                role: input.role
+            },
             process.env.JWT_KEY as string,
             { expiresIn: "1h" }
         )
-        return token;
+        return token
     }
 
-    getTokenData = (token: string): authenticationData => {
+    getTokenData = (token: string): AuthenticationData => {
         try {
-            const payload = jwt.verify(token, process.env.JWT_KEY as string) as authenticationData
-            return payload;
+            const payload = jwt.verify(token, process.env.JWT_KEY as string) as jwt.JwtPayload
+
+            const result = {
+                id: payload.id,
+                role: payload.role
+            }
+
+            return result
         } catch (error: any) {
             throw new CustomError(401, error.message)
         }

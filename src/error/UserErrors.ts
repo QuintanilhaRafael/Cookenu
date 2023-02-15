@@ -26,6 +26,12 @@ export class UserNotFound extends CustomError{
 
 export class Unauthorized extends CustomError{ 
     constructor(){
-        super(401, "User unauthorized.")
+        super(401, "Unauthorized user.")
+    }
+}
+
+export class InvalidRole extends CustomError{ 
+    constructor(){
+        super(400, "Invalid user role. It must be 'normal' or 'admin'.")
     }
 }

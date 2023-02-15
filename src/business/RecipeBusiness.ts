@@ -5,13 +5,17 @@ import { RecipeInputDTO, RecipeOutputDTO } from "../model/RecipeDTO"
 import { Authenticator } from "../services/Authenticator"
 import { IdGenerator } from "../services/IdGenerator"
 import { RecipeRepository } from "./RecipeRepository"
+import { UserRepository } from "./UserRepository"
 
 const authenticator = new Authenticator()
 const idGenerator = new IdGenerator()
 
 export class RecipeBusiness {
 
-  constructor(private recipeDatabase: RecipeRepository) { }
+  constructor(
+    private recipeDatabase: RecipeRepository,
+    private userDatabase: UserRepository
+  ) { }
 
   async createRecipe(input: RecipeInputDTO): Promise<void> {
     try {
@@ -29,14 +33,18 @@ export class RecipeBusiness {
         throw new InvalidDescription()
       }
 
-      authenticator.getTokenData(token)
+      const userId = authenticator.getTokenData(token).id
+
+      const user = await this.userDatabase.findUserById(userId)
 
       const id = idGenerator.generateId()
 
       const recipe: recipe = {
         id,
         title,
-        description
+        description,
+        userId,
+        userName: user.name
       }
 
       await this.recipeDatabase.insertRecipe(recipe)
@@ -64,7 +72,9 @@ export class RecipeBusiness {
         id: recipeDB.id,
         title: recipeDB.title,
         description: recipeDB.description,
-        createdAt: recipeDB.created_at
+        createdAt: recipeDB.created_at,
+        userId: recipeDB.user_id,
+        userName: recipeDB.user_name
       }
 
       return recipe
