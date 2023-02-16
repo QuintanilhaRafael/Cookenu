@@ -1,11 +1,14 @@
 import { CustomError } from "../error/CustomError"
-import { InvalidEmail, InvalidName, InvalidPassword, Unauthorized, UserNotFound } from "../error/UserErrors"
+import { InvalidEmail, InvalidName, InvalidPassword, InvalidRole, Unauthorized, UserNotFound } from "../error/UserErrors"
 import { Authenticator } from "../services/Authenticator"
 import { HashManager } from "../services/HashManager"
-import { user } from "../model/user"
+import { user, UserRole } from "../model/user"
 import { IdGenerator } from "../services/IdGenerator"
 import { LoginInputDTO, UserInputDTO, UserOutputDTO } from "../model/UserDTO"
 import { UserRepository } from "./UserRepository"
+import { FollowRepository } from "./FollowRepository"
+import { RecipeRepository } from "./RecipeRepository"
+import { RecipeOutputDTO } from "../model/RecipeDTO"
 
 const authenticator = new Authenticator()
 const hashManager = new HashManager()
@@ -13,14 +16,18 @@ const idGenerator = new IdGenerator()
 
 export class UserBusiness {
 
-  constructor(private userDatabase: UserRepository) { }
+  constructor(
+    private userDatabase: UserRepository,
+    private followDatabase: FollowRepository,
+    private recipeDatabase: RecipeRepository
+  ) { }
 
   async signup(input: UserInputDTO): Promise<string> {
     try {
-      const { name, email, password } = input
+      const { name, email, password, role } = input
 
-      if (!email || !name || !password) {
-        throw new CustomError(422, "name, email and password must be provided.")
+      if (!email || !name || !password || !role) {
+        throw new CustomError(422, "name, email, password and role must be provided.")
       }
 
       if (!email.includes("@")) {
@@ -35,6 +42,10 @@ export class UserBusiness {
         throw new InvalidPassword()
       }
 
+      if (role.toLowerCase() !== UserRole.ADMIN && role.toLowerCase() !== UserRole.NORMAL) {
+        throw new InvalidRole()
+      }
+
       const id = idGenerator.generateId()
 
       const hashPassword: string = await hashManager.generateHash(password)
@@ -43,12 +54,13 @@ export class UserBusiness {
         id,
         name,
         email,
-        password: hashPassword
+        password: hashPassword,
+        role: role.toLowerCase()
       }
 
       await this.userDatabase.insertUser(user)
 
-      const token = authenticator.generateToken({ id })
+      const token = authenticator.generateToken({ id: user.id, role: user.role })
 
       return token
     } catch (error: any) {
@@ -81,7 +93,7 @@ export class UserBusiness {
         throw new InvalidPassword()
       }
 
-      const token = authenticator.generateToken({ id: user.id })
+      const token = authenticator.generateToken({ id: user.id, role: user.role })
 
       return token
     } catch (error: any) {
@@ -126,6 +138,47 @@ export class UserBusiness {
       return user
     } catch (error: any) {
       throw new CustomError(400, error.message)
+    }
+  }
+
+  async getRecipesFeed(token: string): Promise<RecipeOutputDTO[]> {
+    try {
+
+      const getFollows = await this.followDatabase.selectFollows()
+
+      const userId = authenticator.getTokenData(token).id
+
+      const filterFollows = getFollows.filter(follow => {
+        return follow.user_id === userId
+      })
+
+      let followsIds: string[] = [];
+      filterFollows?.forEach(follow => {
+        followsIds.push(follow.user_to_follow_id)
+      })
+
+      if (followsIds.length === 0) {
+        throw new CustomError(404, "The user is not following anyone.")
+      }
+
+      let feed: RecipeOutputDTO[] = [];
+      for (let followId of followsIds) {
+        const recipes = await this.recipeDatabase.selectFeed(followId)
+        recipes.forEach(recipe => {
+          feed.push({
+            id: recipe.id,
+            title: recipe.title,
+            description: recipe.description,
+            createdAt: recipe.created_at,
+            userId: recipe.user_id,
+            userName: recipe.user_name
+          })
+        })
+      }
+
+      return feed
+    } catch (error: any) {
+      throw new CustomError(error.statusCode, error.message)
     }
   }
 

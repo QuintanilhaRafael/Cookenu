@@ -1,3 +1,4 @@
+import { RecipeOutputDTO } from "../model/RecipeDTO";
 import { user } from "../model/user";
 import { UserOutputDTO } from "../model/UserDTO";
 

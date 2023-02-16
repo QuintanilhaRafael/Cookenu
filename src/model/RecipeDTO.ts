@@ -8,5 +8,7 @@ export interface RecipeOutputDTO {
   id: string,
   title: string,
   description: string,
-  createdAt: Date
+  createdAt: Date,
+  userId: string,
+  userName: string
 }

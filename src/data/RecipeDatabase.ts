@@ -9,7 +9,13 @@ export class RecipeDatabase extends BaseDatabase implements RecipeRepository {
   async insertRecipe(recipe: recipe): Promise<void> {
     try {
       await RecipeDatabase.connection
-        .insert(recipe)
+        .insert({
+          id: recipe.id,
+          title: recipe.title,
+          description: recipe.description,
+          user_id: recipe.userId,
+          user_name: recipe.userName
+        })
         .into(RecipeDatabase.TABLE_NAME);
     } catch (error: any) {
       throw new CustomError(error.statusCode, error.message)
@@ -24,6 +30,18 @@ export class RecipeDatabase extends BaseDatabase implements RecipeRepository {
       return result[0]
     } catch (error: any) {
       throw new CustomError(400, error.message);
+    }
+  }
+
+  async selectFeed(followId: string): Promise<recipeDB[]> {
+    try {
+      const result = await RecipeDatabase.connection(RecipeDatabase.TABLE_NAME)
+        .select("*")
+        .where({ user_id: followId })
+
+      return result
+    } catch (error: any) {
+      throw new CustomError(error.statusCode, error.message)
     }
   }
 }
