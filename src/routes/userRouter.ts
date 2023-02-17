@@ -21,6 +21,8 @@ userRouter.get("/user/profile", (req, res) => userController.getProfile(req, res
 
 userRouter.get("/user/feed", (req, res) => userController.getRecipesFeed(req, res))
 
+userRouter.put("/user/forgotPassword", (req, res) => userController.forgotPassword(req, res))
+
 userRouter.get("/user/:id", (req, res) => userController.getUser(req, res))
 
 userRouter.delete("/user/delete/:id", (req, res) => userController.deleteUser(req, res))

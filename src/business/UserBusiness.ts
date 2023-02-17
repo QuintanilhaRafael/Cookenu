@@ -9,10 +9,16 @@ import { UserRepository } from "./UserRepository"
 import { FollowRepository } from "./FollowRepository"
 import { RecipeRepository } from "./RecipeRepository"
 import { RecipeOutputDTO } from "../model/RecipeDTO"
+import generator from 'generate-password'
+import { MailTransporter } from "../services/MailTransporter"
+import dotenv from 'dotenv'
+
+dotenv.config()
 
 const authenticator = new Authenticator()
 const hashManager = new HashManager()
 const idGenerator = new IdGenerator()
+const mailTransporter = new MailTransporter()
 
 export class UserBusiness {
 
@@ -176,7 +182,11 @@ export class UserBusiness {
         })
       }
 
-      return feed
+      const orderedFeed = feed.sort((a, b) =>
+        (a.createdAt < b.createdAt) ? 1 : ((b.createdAt < a.createdAt) ? -1 : 0)
+      )
+
+      return orderedFeed
     } catch (error: any) {
       throw new CustomError(error.statusCode, error.message)
     }
@@ -187,7 +197,7 @@ export class UserBusiness {
       if (!token || !id) {
         throw new CustomError(422, "token and id must be provided.")
       }
-      
+
       const user = await this.userDatabase.findUserById(id)
 
       if (!user) {
@@ -198,13 +208,46 @@ export class UserBusiness {
 
       if (authenticationData.role !== UserRole.ADMIN) {
         throw new Unauthorized()
-      }      
+      }
 
       await this.followDatabase.deleteUserFollows(id)
 
       await this.recipeDatabase.deleteUserRecipes(id)
 
-      await this.userDatabase.deleteUser(id)      
+      await this.userDatabase.deleteUser(id)
+    } catch (error: any) {
+      throw new CustomError(error.statusCode, error.message)
+    }
+  }
+
+  async forgotPassword(email: string): Promise<void> {
+    try {
+      if (!email) {
+        throw new CustomError(422, "email must be provided.")
+      }
+
+      const user = await this.userDatabase.findUserByEmail(email)
+
+      if (!user) {
+        throw new UserNotFound()
+      }
+
+      const newPassword = generator.generate({
+        length: 10,
+        numbers: true
+      })
+
+      const hashPassword: string = await hashManager.generateHash(newPassword)
+
+      await this.userDatabase.updatePassword(hashPassword, email)
+
+      await mailTransporter.transporter.sendMail({
+        from: process.env.NODEMAILER_USER,
+        to: email,
+        subject: "New Password!",
+        html: `<p>Hi ${user.name}!</p> <p>Your new password is <b>${newPassword}</b>.</p>`
+      })
+
     } catch (error: any) {
       throw new CustomError(error.statusCode, error.message)
     }
