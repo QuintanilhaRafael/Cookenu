@@ -17,3 +17,9 @@ export class RecipeNotFound extends CustomError{
         super(404, "Recipe not found.")
     }
 }
+
+export class DifferentRecipeCreator extends CustomError{
+    constructor(){
+        super(400, "This recipe is from a different user.")
+    }
+}

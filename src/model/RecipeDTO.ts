@@ -12,3 +12,10 @@ export interface RecipeOutputDTO {
   userId: string,
   userName: string
 }
+
+export interface EditRecipeInputDTO {
+  id: string,
+  title: string,
+  description: string,
+  token: string
+}

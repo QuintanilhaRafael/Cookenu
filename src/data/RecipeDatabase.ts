@@ -1,6 +1,6 @@
 import { RecipeRepository } from "../business/RecipeRepository";
 import { CustomError } from "../error/CustomError";
-import { recipe, recipeDB } from "../model/recipe";
+import { editRecipeInput, recipe, recipeDB } from "../model/recipe";
 import { BaseDatabase } from "./BaseDatabase";
 
 export class RecipeDatabase extends BaseDatabase implements RecipeRepository {
@@ -40,6 +40,39 @@ export class RecipeDatabase extends BaseDatabase implements RecipeRepository {
         .where({ user_id: followId })
 
       return result
+    } catch (error: any) {
+      throw new CustomError(error.statusCode, error.message)
+    }
+  }
+
+  async updateRecipe(recipe: editRecipeInput): Promise<void> {
+    try {
+      await RecipeDatabase.connection
+        .update({ title: recipe.title, description: recipe.description })
+        .where({ id: recipe.id })
+        .into(RecipeDatabase.TABLE_NAME)
+    } catch (error: any) {
+      throw new CustomError(error.statusCode, error.message)
+    }
+  }
+
+  async deleteRecipe(recipeId: string): Promise<void> {
+    try {
+      await RecipeDatabase.connection(RecipeDatabase.TABLE_NAME)
+        .delete()
+        .where({ id: recipeId })
+
+    } catch (error: any) {
+      throw new CustomError(error.statusCode, error.message)
+    }
+  }
+
+  async deleteUserRecipes(userId: string): Promise<void> {
+    try {
+      await RecipeDatabase.connection(RecipeDatabase.TABLE_NAME)
+        .delete()
+        .where({ user_id: userId })
+
     } catch (error: any) {
       throw new CustomError(error.statusCode, error.message)
     }

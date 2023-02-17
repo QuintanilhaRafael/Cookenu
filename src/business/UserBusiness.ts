@@ -182,4 +182,32 @@ export class UserBusiness {
     }
   }
 
+  async deleteUser(token: string, id: string): Promise<void> {
+    try {
+      if (!token || !id) {
+        throw new CustomError(422, "token and id must be provided.")
+      }
+      
+      const user = await this.userDatabase.findUserById(id)
+
+      if (!user) {
+        throw new UserNotFound()
+      }
+
+      const authenticationData = authenticator.getTokenData(token)
+
+      if (authenticationData.role !== UserRole.ADMIN) {
+        throw new Unauthorized()
+      }      
+
+      await this.followDatabase.deleteUserFollows(id)
+
+      await this.recipeDatabase.deleteUserRecipes(id)
+
+      await this.userDatabase.deleteUser(id)      
+    } catch (error: any) {
+      throw new CustomError(error.statusCode, error.message)
+    }
+  }
+
 }

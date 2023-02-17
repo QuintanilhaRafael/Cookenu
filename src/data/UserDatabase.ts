@@ -39,4 +39,15 @@ export class UserDatabase extends BaseDatabase implements UserRepository {
     }
   }
 
+  async deleteUser(id: string): Promise<void> {
+    try {
+      await UserDatabase.connection(UserDatabase.TABLE_NAME)
+        .delete()
+        .where({ id })
+
+    } catch (error: any) {
+      throw new CustomError(error.statusCode, error.message)
+    }
+  }
+
 }

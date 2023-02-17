@@ -41,4 +41,15 @@ export class FollowDatabase extends BaseDatabase implements FollowRepository {
       throw new CustomError(error.statusCode, error.message)
     }
   }
+
+  async deleteUserFollows(userId: string): Promise<void> {
+    try {
+      await FollowDatabase.connection(FollowDatabase.TABLE_NAME)
+        .delete()
+        .where({ user_id: userId })
+
+    } catch (error: any) {
+      throw new CustomError(error.statusCode, error.message)
+    }
+  }
 }

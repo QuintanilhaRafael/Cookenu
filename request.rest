@@ -14,7 +14,7 @@ POST http://localhost:3003/login
 Content-Type: application/json
 
 {
-   "email": "rodrigo.silva@email.com" ,
+   "email": "jose.ferreira@email.com",
    "password": "123456"
 }
 
@@ -28,21 +28,21 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFjZDBiYjAzLTVlYzgt
 
 ### CREATE RECIPE
 POST http://localhost:3003/recipe
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFjZDBiYjAzLTVlYzgtNDcwNi1hOTBlLWIzZDY5NmFjYWU3OCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3NjUwMDk4MSwiZXhwIjoxNjc2NTA0NTgxfQ.AJsg4iI0nGo9Y5ltlStuIm4FVX6KXL1nD2XqMNTf3w8
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFjZDBiYjAzLTVlYzgtNDcwNi1hOTBlLWIzZDY5NmFjYWU3OCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3NjU5MjgxNSwiZXhwIjoxNjc2NTk2NDE1fQ.ZOImdxaxDKV5zuX76b1lRPpZ-sg5aYHFocKQ26igMlg
 Content-Type: application/json
 
 {
-    "title": "Bolo de chocolate",
-    "description": "bolo feito com farinha, cacau em pó e fermento"
+    "title": "Strogonoff",
+    "description": "Frango, creme de leite e milho."
 }
 
 ### GET RECIPE
-GET http://localhost:3003/recipe/37057171-0126-471c-b9bf-6576258f7c19
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFjZDBiYjAzLTVlYzgtNDcwNi1hOTBlLWIzZDY5NmFjYWU3OCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3NjUwMDk4MSwiZXhwIjoxNjc2NTA0NTgxfQ.AJsg4iI0nGo9Y5ltlStuIm4FVX6KXL1nD2XqMNTf3w8
+GET http://localhost:3003/recipe/48340b8c-b30a-483b-aee8-bf3c4abf7be8
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFjZDBiYjAzLTVlYzgtNDcwNi1hOTBlLWIzZDY5NmFjYWU3OCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3NjU5MjgxNSwiZXhwIjoxNjc2NTk2NDE1fQ.ZOImdxaxDKV5zuX76b1lRPpZ-sg5aYHFocKQ26igMlg
 
 ### FOLLOW ANOTHER USER
 POST http://localhost:3003/follow/create
-Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQxNTM4NmQyLWY4ODAtNDkzZC1iYjE0LTQ0NDIxNDBmN2Y3YyIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2NzY1MDMzNjYsImV4cCI6MTY3NjUwNjk2Nn0.ZC4nl3hFOM4r6g7K8u9r66XGHh0Qg471DVb51ITJHqU
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjliMzEyMTcxLTZmNzItNGNmMi1iYjM3LTQ3ZDVlNzRjOGEzNyIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2NzY1OTA2NTcsImV4cCI6MTY3NjU5NDI1N30.WLFIZgZAdY65FnTEV6uI2bQTc_dCKhxigCl2ED-3NK0
 Content-Type: application/json
 
 {
@@ -56,3 +56,21 @@ Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFjZDBiYjAzLTVlYzgt
 ### GET RECIPES FEED
 GET http://localhost:3003/user/feed
 Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQxNTM4NmQyLWY4ODAtNDkzZC1iYjE0LTQ0NDIxNDBmN2Y3YyIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2NzY1MDMzNjYsImV4cCI6MTY3NjUwNjk2Nn0.ZC4nl3hFOM4r6g7K8u9r66XGHh0Qg471DVb51ITJHqU
+
+### EDIT RECIPE
+PUT http://localhost:3003/recipe/edit/a7669c6e-ddc4-433e-89d3-34836e1461c5
+Content-Type: application/json
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQxNTM4NmQyLWY4ODAtNDkzZC1iYjE0LTQ0NDIxNDBmN2Y3YyIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2NzY1Nzk4MjUsImV4cCI6MTY3NjU4MzQyNX0.ieuJ5VhvtBeCbwayP4eWhpG0iO1WuGo2H7D2ALuEFeE
+
+{
+   "title": "Strogonoff de carne",
+   "description": "Carne de boi, creme de leite, molho de tomate e cebola." 
+}
+
+### DELETE RECIPE
+DELETE http://localhost:3003/recipe/delete/9b312171-6f72-4cf2-bb37-47d5e74c8a37
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjQxNTM4NmQyLWY4ODAtNDkzZC1iYjE0LTQ0NDIxNDBmN2Y3YyIsInJvbGUiOiJub3JtYWwiLCJpYXQiOjE2NzY1ODc0MjcsImV4cCI6MTY3NjU5MTAyN30.PLixcJ2PBsQqoyGWYBFF_bXSEzCGI3q-g2UoQVlB3y0
+
+### DELETE USER
+DELETE http://localhost:3003/user/delete/9b312171-6f72-4cf2-bb37-47d5e74c8a37
+Authorization: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6ImFjZDBiYjAzLTVlYzgtNDcwNi1hOTBlLWIzZDY5NmFjYWU3OCIsInJvbGUiOiJhZG1pbiIsImlhdCI6MTY3NjU5MDc0NCwiZXhwIjoxNjc2NTk0MzQ0fQ.NusAqrOLw3GIInKhDiUx5axBogsUrf3CZh7t0ZS2Py8

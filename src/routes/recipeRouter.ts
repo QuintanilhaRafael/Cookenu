@@ -14,3 +14,7 @@ const recipeController = new RecipeController(recipeBusiness)
 recipeRouter.post("/", (req, res) => recipeController.createRecipe(req, res))
 
 recipeRouter.get("/:id", (req, res) => recipeController.getRecipe(req, res))
+
+recipeRouter.put("/edit/:id", (req, res) => recipeController.editRecipe(req, res))
+
+recipeRouter.delete("/delete/:id", (req, res) => recipeController.deleteRecipe(req, res))

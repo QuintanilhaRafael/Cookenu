@@ -4,6 +4,7 @@ import { IdGenerator } from "../services/IdGenerator"
 import { FollowDatabase } from "../data/FollowDatabase"
 import { FollowInputDTO, UnfollowInputDTO } from "../model/FollowDTO"
 import { follow } from "../model/follow"
+import { AlreadyFollowing, InvalidFollow } from "../error/FollowErrors"
 
 const authenticator = new Authenticator()
 const idGenerator = new IdGenerator()
@@ -31,11 +32,11 @@ export class FollowBusiness {
       })
 
       if (findFollow) {
-        throw new CustomError(409, "This user is already being followed.")
+        throw new AlreadyFollowing()
       }
 
       if (userId === userToFollowId) {
-        throw new CustomError(400, "The user cannot follow himself.")
+        throw new InvalidFollow()
       }
 
       const follow: follow = {
@@ -55,8 +56,8 @@ export class FollowBusiness {
     try {
       const { token, userToUnfollowId } = input
 
-      if (!userToUnfollowId) {
-        throw new CustomError(422, "userToUnfollowId must be provided.")
+      if (!userToUnfollowId || !token) {
+        throw new CustomError(422, "userToUnfollowId and token must be provided.")
       }
 
       const userId = authenticator.getTokenData(token).id

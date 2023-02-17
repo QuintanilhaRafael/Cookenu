@@ -1,6 +1,5 @@
 import { Request, Response } from "express";
 import { UserBusiness } from "../business/UserBusiness";
-import { recipe } from "../model/recipe";
 import { RecipeOutputDTO } from "../model/RecipeDTO";
 import { LoginInputDTO, UserInputDTO } from "../model/UserDTO";
 
@@ -36,9 +35,9 @@ export class UserController {
 
       const token = await this.userBusiness.login(input)
 
-      res.status(200).send({ token });
+      res.status(200).send({ token })
     } catch (error: any) {
-      res.status(400).send(error.message);
+      res.status(error.statusCode || 400).send(error.message || error.sqlMessage)
     }
   }
 
@@ -48,9 +47,9 @@ export class UserController {
 
       const user = await this.userBusiness.getProfile(token)
 
-      res.status(200).send(user);
+      res.status(200).send(user)
     } catch (error: any) {
-      res.status(400).send(error.message);
+      res.status(error.statusCode || 400).send(error.message || error.sqlMessage)
     }
   }
 
@@ -61,9 +60,9 @@ export class UserController {
 
       const user = await this.userBusiness.getUser(token, id)
 
-      res.status(200).send(user);
+      res.status(200).send(user)
     } catch (error: any) {
-      res.status(400).send(error.message);
+      res.status(error.statusCode || 400).send(error.message || error.sqlMessage)
     }
   }
 
@@ -73,7 +72,20 @@ export class UserController {
 
       const recipes: RecipeOutputDTO[] = await this.userBusiness.getRecipesFeed(token)
 
-      res.status(200).send({ recipes });
+      res.status(200).send({ recipes })
+    } catch (error: any) {
+      res.status(error.statusCode || 400).send(error.message || error.sqlMessage)
+    }
+  }
+
+  async deleteUser(req: Request, res: Response): Promise<void> {
+    try {
+      const token = req.headers.authorization as string
+      const id = req.params.id
+
+      await this.userBusiness.deleteUser(token, id)
+
+      res.status(200).send({ message: "User successfully deleted." })
     } catch (error: any) {
       res.status(error.statusCode || 400).send(error.message || error.sqlMessage)
     }
