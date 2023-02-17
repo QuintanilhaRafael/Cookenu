@@ -2,7 +2,6 @@ import { CustomError } from "../error/CustomError"
 import { InvalidEmail, InvalidName, InvalidPassword, InvalidRole, Unauthorized, UserNotFound } from "../error/UserErrors"
 import { Authenticator } from "../services/Authenticator"
 import { HashManager } from "../services/HashManager"
-import { user, UserRole } from "../model/user"
 import { IdGenerator } from "../services/IdGenerator"
 import { LoginInputDTO, UserInputDTO, UserOutputDTO } from "../model/UserDTO"
 import { UserRepository } from "./UserRepository"
@@ -12,6 +11,7 @@ import { RecipeOutputDTO } from "../model/RecipeDTO"
 import generator from 'generate-password'
 import { MailTransporter } from "../services/MailTransporter"
 import dotenv from 'dotenv'
+import { user, UserRole } from "../model/user"
 
 dotenv.config()
 
