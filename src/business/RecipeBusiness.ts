@@ -1,7 +1,9 @@
 import { CustomError } from "../error/CustomError"
-import { InvalidDescription, InvalidTitle, RecipeNotFound } from "../error/RecipeErros"
-import { recipe, recipeDB } from "../model/recipe"
-import { RecipeInputDTO, RecipeOutputDTO } from "../model/RecipeDTO"
+import { DifferentRecipeCreator, InvalidDescription, InvalidTitle, RecipeNotFound } from "../error/RecipeErros"
+import { Unauthorized } from "../error/UserErrors"
+import { editRecipeInput, recipe } from "../model/recipe"
+import { EditRecipeInputDTO, RecipeInputDTO, RecipeOutputDTO } from "../model/RecipeDTO"
+import { UserRole } from "../model/user"
 import { Authenticator } from "../services/Authenticator"
 import { IdGenerator } from "../services/IdGenerator"
 import { RecipeRepository } from "./RecipeRepository"
@@ -80,6 +82,72 @@ export class RecipeBusiness {
       return recipe
     } catch (error: any) {
       throw new CustomError(400, error.message)
+    }
+  }
+
+  public editRecipe = async (input: EditRecipeInputDTO) => {
+    try {
+      const { id, title, description, token } = input;
+
+      if (!id || !title || !description || !token) {
+        throw new CustomError(422, 'id, title, description and token must be provided.')
+      }
+
+      if (title.length < 3) {
+        throw new InvalidTitle()
+      }
+
+      if (description.length < 5) {
+        throw new InvalidDescription()
+      }
+
+      const authenticationData = authenticator.getTokenData(token)
+
+      if (authenticationData.role !== UserRole.NORMAL) {
+        throw new Unauthorized()
+      }
+
+      const recipe = await this.recipeDatabase.findRecipeById(id)
+
+      if (recipe.user_id !== authenticationData.id) {
+        throw new DifferentRecipeCreator()
+      }
+
+      const editRecipeInput: editRecipeInput = {
+        id,
+        title,
+        description,
+      };
+
+      await this.recipeDatabase.updateRecipe(editRecipeInput)
+    } catch (error: any) {
+      throw new CustomError(400, error.message)
+    }
+  }
+
+  async deleteRecipe(token: string, id: string): Promise<void> {
+    try {
+      if (!token || !id) {
+        throw new CustomError(422, "token and id must be provided.")
+      }
+
+      const authenticationData = authenticator.getTokenData(token)
+
+      const recipe = await this.recipeDatabase.findRecipeById(id)
+
+      if (authenticationData.role === UserRole.NORMAL) {
+        if (recipe.user_id !== authenticationData.id) {
+          throw new DifferentRecipeCreator()
+        }
+        await this.recipeDatabase.deleteRecipe(id)
+      }            
+
+      if (authenticationData.role === UserRole.ADMIN) {
+        await this.recipeDatabase.deleteRecipe(id)
+      }      
+
+    } catch (error: any) {
+      throw new CustomError(error.statusCode, error.message)
     }
   }
 }

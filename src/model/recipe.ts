@@ -14,3 +14,9 @@ export type recipeDB = {
   user_id: string,
   user_name: string
 }
+
+export type editRecipeInput = {
+  id: string,
+  title: string,
+  description: string
+}

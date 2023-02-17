@@ -13,9 +13,9 @@ export class FollowController {
         userToFollowId: req.body.userToFollowId
       }
 
-      await this.followBusiness.createFollow(input);
+      await this.followBusiness.createFollow(input)
 
-      res.status(201).send({ message: "User successfully followed." });
+      res.status(201).send({ message: "User successfully followed." })
     } catch (error: any) {
       res.status(error.statusCode || 400).send(error.message || error.sqlMessage)
     }
@@ -28,9 +28,9 @@ export class FollowController {
         userToUnfollowId: req.params.userToUnfollowId
       }
 
-      await this.followBusiness.deleteFollow(input);
+      await this.followBusiness.deleteFollow(input)
 
-      res.status(201).send({ message: "User successfully unfollowed." });
+      res.status(201).send({ message: "User successfully unfollowed." })
     } catch (error: any) {
       res.status(error.statusCode || 400).send(error.message || error.sqlMessage)
     }

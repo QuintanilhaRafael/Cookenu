@@ -1,6 +1,6 @@
 import * as jwt from "jsonwebtoken"
 import { CustomError } from "../error/CustomError";
-import { AuthenticationData } from "../model/authenticationData";
+import { AuthenticationData } from "../model/AuthenticationData";
 
 export class Authenticator {
     public generateToken = (input: AuthenticationData): string => {
