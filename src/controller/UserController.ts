@@ -26,11 +26,9 @@ export class UserController {
 
   async login(req: Request, res: Response): Promise<void> {
     try {
-      const { email, password } = req.body;
-
       const input: LoginInputDTO = {
-        email,
-        password
+        email: req.body.email,
+        password: req.body.password
       };
 
       const token = await this.userBusiness.login(input)
@@ -86,6 +84,18 @@ export class UserController {
       await this.userBusiness.deleteUser(token, id)
 
       res.status(200).send({ message: "User successfully deleted." })
+    } catch (error: any) {
+      res.status(error.statusCode || 400).send(error.message || error.sqlMessage)
+    }
+  }
+
+  async forgotPassword(req: Request, res: Response): Promise<void> {
+    try {
+      const email = req.body.email
+
+      await this.userBusiness.forgotPassword(email)
+
+      res.status(201).send({ message: "A new password has been sent to your email." })
     } catch (error: any) {
       res.status(error.statusCode || 400).send(error.message || error.sqlMessage)
     }

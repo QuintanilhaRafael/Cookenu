@@ -3,7 +3,7 @@ import { CustomError } from "../error/CustomError";
 import { AuthenticationData } from "../model/AuthenticationData";
 
 export class Authenticator {
-    public generateToken = (input: AuthenticationData): string => {
+    generateToken = (input: AuthenticationData): string => {
         const token = jwt.sign(
             {
                 id: input.id,
