@@ -91,6 +91,6 @@ https://documenter.getpostman.com/view/22376488/2s93CHtZsA
 
 ## 👩‍💻 Desenvolvedores:
 
-- João Vitor Gomes Lara Resende.
 - Rafael Gonçalves Quintanilha Guimarães.
+- João Vitor Gomes Lara Resende.
 - Nei Luis Duarte Tavares Junior.
